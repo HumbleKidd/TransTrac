@@ -20,10 +20,12 @@
             --secondary: #64748B;
             --success: #22C55E;
             --danger: #EF4444;
+            --note: #F59E0B;
             --text-main: #1E293B;
             --text-sub: #64748B;
             --timestamp: #64748B;
             --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            --border: rgba(0,0,0,0.05);
         }
 
         * { 
@@ -54,6 +56,7 @@
         .icon-wallet { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNjM2NkYxIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTIwIDIxaC0xNGEyIDIgMCAwIDEtMi0ydi0xNGEyIDIgMCAwIDEgMi0yaDE2djE0YTIgMiAwIDAgMS0yIDJ6Ii8+PHBhdGggZD0iTTIyIDEwaC00YTIgMiAwIDAgMC0yIDJ2MGEyIDIgMCAwIDAgMiAyaDQiLz48L3N2Zz4='); }
         .icon-plus { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PGxpbmUgeDE9IjEyIiB5MT0iNSIgeDI9IjEyIiB5Mj0iMTkiPjwvbGluZT48bGluZSB4MT0iNSIgeTE9IjEyIiB4Mj0iMTkiIHkyPSIxMiI+PC9saW5lPjwvc3ZnPg=='); width: 20px; height: 20px; opacity: 1; }
         .icon-sparkle { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNjM2NkYxIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTEyIDN2MW0wIDE2djFtOC05aC0xbS0xNiAwSDNtcTEzLjA1LTYuOTUgMS0xIDUuOTUgMTMuMDUgMSAxLTEzLjA1LTYuOTUgMSAxLTUuOTUgMTMuMDUgMSAxIi8+PC9zdmc+'); }
+        .icon-note { background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRjU5RTBCIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTExIDRINC41QTIuNSAyLjUgMCAwIDAgMiA2LjV2MTRBMi41IDIuNSAwIDAgMCA0LjUgMjNoMTRhMi41IDIuNSAwIDAgMCAyLjUtMi41VjEzIi8+PHBhdGggZD0iTTE4LjUgMi41YTIuMTIxIDIuMTIxIDAgMSAxIDMgM0wyMCAxMmwtNCAxIDEtNHoiLz48L3N2Zz4='); }
 
         .container {
             width: 100%;
@@ -106,6 +109,27 @@
             font-weight: 600;
         }
 
+        /* Group Separator */
+        .day-separator {
+            display: flex;
+            align-items: center;
+            margin: 20px 0 12px 0;
+            gap: 10px;
+        }
+        .day-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        .day-line {
+            height: 1px;
+            background: var(--border);
+            flex-grow: 1;
+        }
+
         .feed-header {
             display: flex;
             justify-content: space-between;
@@ -123,7 +147,7 @@
 
         .spend-item {
             background: var(--card);
-            padding: 12px 16px;
+            padding: 14px 16px;
             border-radius: 14px;
             margin-bottom: 8px;
             display: flex;
@@ -140,8 +164,10 @@
         
         .item-right { text-align: right; display: flex; flex-direction: column; align-items: flex-end; }
         .item-amount { font-weight: 800; color: var(--danger); font-size: 0.95rem; }
-        .item-delete { color: #CBD5E1; font-size: 11px; margin-top: 2px; text-decoration: none; border: none; background: none; padding: 0; }
+        .item-amount.is-note { color: var(--note); }
+        .item-delete { color: #CBD5E1; font-size: 11px; margin-top: 4px; text-decoration: none; border: none; background: none; padding: 0; }
 
+        /* Modal Styles */
         #add-modal {
             position: fixed;
             bottom: 0;
@@ -165,6 +191,32 @@
 
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
+        /* Mode Selector */
+        .mode-selector {
+            display: flex;
+            background: #F1F5F9;
+            padding: 4px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+        .mode-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--secondary);
+            border-radius: 9px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .mode-btn.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
         .input-field {
             width: 100%;
             background: #F1F5F9;
@@ -183,7 +235,9 @@
             border-radius: 12px;
             font-weight: 700;
             border: none;
+            transition: opacity 0.2s;
         }
+        .btn-submit:active { opacity: 0.8; }
 
         .fab {
             position: fixed;
@@ -218,14 +272,14 @@
 
     <div class="summary-card">
         <div>
-            <div style="font-size: 0.85rem; opacity: 0.9;">Today's Total</div>
+            <div style="font-size: 0.85rem; opacity: 0.9;">Today's Total Spend</div>
             <div id="total-val" class="total-val">$0.00</div>
         </div>
         <button class="download-btn" onclick="downloadReport()">Save Report Image</button>
     </div>
 
     <div class="feed-header">
-        <div class="feed-title"><span class="icon icon-wallet"></span> Activity</div>
+        <div class="feed-title"><span class="icon icon-wallet"></span> Activity Feed</div>
     </div>
     
     <div id="spending-list"></div>
@@ -235,24 +289,34 @@
 
 <div id="add-modal" onclick="toggleModal(false)">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <h3 style="margin-top:0; font-size: 1.2rem;">New Entry</h3>
-        <textarea id="item-name" class="input-field" rows="3" placeholder="Description"></textarea>
-        <input type="text" id="item-loc" class="input-field" placeholder="Store/Place">
+        <h3 id="modal-title" style="margin-top:0; font-size: 1.2rem;">New Entry</h3>
         
-        <div style="display:flex; gap:10px; margin-bottom:10px;">
-            <input type="number" id="item-amount" class="input-field" placeholder="0.00" style="flex:1">
-            <input type="datetime-local" id="item-time" class="input-field" style="flex:1.5">
+        <div class="mode-selector">
+            <button class="mode-btn active" id="mode-spend" onclick="setMode('spend')">Transaction</button>
+            <button class="mode-btn" id="mode-note" onclick="setMode('note')">Notepad</button>
+        </div>
+
+        <textarea id="item-name" class="input-field" rows="3" placeholder="Description or Note..."></textarea>
+        
+        <div id="spend-fields">
+            <input type="text" id="item-loc" class="input-field" placeholder="Store/Place">
+            <div style="display:flex; gap:10px;">
+                <input type="number" id="item-amount" class="input-field" placeholder="0.00" style="flex:1">
+            </div>
         </div>
         
-        <button class="btn-submit" onclick="addExpense()">Add Transaction</button>
-        <button onclick="toggleModal(false)" style="width:100%; background:none; border:none; color:var(--secondary); margin-top:10px; font-size:0.9rem;">Close</button>
+        <input type="datetime-local" id="item-time" class="input-field" style="margin-top: 10px;">
+        
+        <button id="main-submit" class="btn-submit" onclick="addExpense()">Add Transaction</button>
+        <button onclick="toggleModal(false)" style="width:100%; background:none; border:none; color:var(--secondary); margin-top:10px; font-size:0.9rem; padding: 10px;">Close</button>
     </div>
 </div>
 
 <canvas id="export-canvas"></canvas>
 
 <script>
-    let expenses = JSON.parse(localStorage.getItem('spending_v10')) || [];
+    let expenses = JSON.parse(localStorage.getItem('spending_v11')) || [];
+    let currentMode = 'spend';
 
     // CLOCK (12-hour format)
     function updateClock() {
@@ -281,9 +345,40 @@
         return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
     }
 
+    // Currency Formatter with Commas
+    function formatCurrency(num) {
+        return parseFloat(num).toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    function setMode(mode) {
+        currentMode = mode;
+        const spendFields = document.getElementById('spend-fields');
+        const submitBtn = document.getElementById('main-submit');
+        const title = document.getElementById('modal-title');
+        
+        document.getElementById('mode-spend').classList.toggle('active', mode === 'spend');
+        document.getElementById('mode-note').classList.toggle('active', mode === 'note');
+
+        if(mode === 'note') {
+            spendFields.style.display = 'none';
+            submitBtn.innerText = 'Save Note';
+            submitBtn.style.background = 'var(--note)';
+            title.innerText = 'New Note';
+        } else {
+            spendFields.style.display = 'block';
+            submitBtn.innerText = 'Add Transaction';
+            submitBtn.style.background = 'var(--primary)';
+            title.innerText = 'New Entry';
+        }
+    }
+
     function toggleModal(show) {
         document.getElementById('add-modal').style.display = show ? 'flex' : 'none';
         if(show) {
+            setMode('spend'); // Default to spend
             const now = new Date();
             now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
             document.getElementById('item-time').value = now.toISOString().slice(0, 16);
@@ -293,24 +388,43 @@
 
     function addExpense() {
         const name = document.getElementById('item-name').value.trim();
-        const loc = document.getElementById('item-loc').value || 'Store';
-        const amount = document.getElementById('item-amount').value;
         const time = document.getElementById('item-time').value;
+        
+        if (!name) return;
 
-        if (!name || !amount) return;
+        if(currentMode === 'spend') {
+            const loc = document.getElementById('item-loc').value || 'Store';
+            const amount = document.getElementById('item-amount').value;
+            if (!amount) return;
 
-        expenses.unshift({
-            id: Date.now(), name, loc,
-            amount: parseFloat(amount).toFixed(2),
-            time: time.replace('T', ' ')
-        });
+            expenses.unshift({
+                id: Date.now(), type: 'spend', name, loc,
+                amount: parseFloat(amount),
+                time: time.replace('T', ' ')
+            });
+        } else {
+            expenses.unshift({
+                id: Date.now(), type: 'note', name,
+                time: time.replace('T', ' ')
+            });
+        }
 
-        localStorage.setItem('spending_v10', JSON.stringify(expenses));
-        renderExpenses();
+        saveAndRender();
         toggleModal(false);
+        clearForm();
+    }
+
+    function clearForm() {
         document.getElementById('item-name').value = '';
         document.getElementById('item-loc').value = '';
         document.getElementById('item-amount').value = '';
+    }
+
+    function saveAndRender() {
+        // Sort by date descending
+        expenses.sort((a, b) => new Date(b.time) - new Date(a.time));
+        localStorage.setItem('spending_v11', JSON.stringify(expenses));
+        renderExpenses();
     }
 
     function renderExpenses() {
@@ -318,62 +432,107 @@
         const totalDisp = document.getElementById('total-val');
         list.innerHTML = '';
         let total = 0;
+        let lastDateLabel = "";
 
         expenses.forEach((item, index) => {
-            total += parseFloat(item.amount);
+            // Grouping Logic
+            const itemDate = new Date(item.time.replace(' ', 'T'));
+            const dateLabel = itemDate.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+            
+            if (dateLabel !== lastDateLabel) {
+                const sep = document.createElement('div');
+                sep.className = 'day-separator';
+                sep.innerHTML = `<div class="day-line"></div><div class="day-label">${dateLabel}</div><div class="day-line"></div>`;
+                list.appendChild(sep);
+                lastDateLabel = dateLabel;
+            }
+
+            if(item.type !== 'note') total += parseFloat(item.amount);
+            
             const div = document.createElement('div');
             div.className = 'spend-item';
-            div.innerHTML = `
-                <div class="item-left">
-                    <span class="item-name">${item.name}</span>
-                    <div class="item-meta">
-                        <span>${item.loc}</span>
-                        <span class="dot">•</span>
-                        <span>${format12h(item.time)}</span>
+            
+            if(item.type === 'note') {
+                div.innerHTML = `
+                    <div class="item-left">
+                        <span class="item-name" style="color:var(--note)">${item.name}</span>
+                        <div class="item-meta">
+                            <span class="icon icon-note" style="opacity:1"></span>
+                            <span>Note</span>
+                            <span class="dot">•</span>
+                            <span>${format12h(item.time)}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="item-right">
-                    <div class="item-amount">-$${item.amount}</div>
-                    <button class="item-delete" onclick="deleteItem(${index})">Delete</button>
-                </div>
-            `;
+                    <div class="item-right">
+                        <div class="item-amount is-note">NOTE</div>
+                        <button class="item-delete" onclick="deleteItem(${index})">Delete</button>
+                    </div>
+                `;
+            } else {
+                div.innerHTML = `
+                    <div class="item-left">
+                        <span class="item-name">${item.name}</span>
+                        <div class="item-meta">
+                            <span>${item.loc}</span>
+                            <span class="dot">•</span>
+                            <span>${format12h(item.time)}</span>
+                        </div>
+                    </div>
+                    <div class="item-right">
+                        <div class="item-amount">-$${formatCurrency(item.amount)}</div>
+                        <button class="item-delete" onclick="deleteItem(${index})">Delete</button>
+                    </div>
+                `;
+            }
             list.appendChild(div);
         });
-        totalDisp.innerText = `$${total.toFixed(2)}`;
+        totalDisp.innerText = `$${formatCurrency(total)}`;
     }
 
     function deleteItem(index) {
         expenses.splice(index, 1);
-        localStorage.setItem('spending_v10', JSON.stringify(expenses));
-        renderExpenses();
+        saveAndRender();
     }
 
     function downloadReport() {
         const canvas = document.getElementById('export-canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = 600;
-        canvas.height = 150 + (expenses.length * 65);
+        canvas.height = 150 + (expenses.length * 75);
         ctx.fillStyle = "#ffffff";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         
         ctx.fillStyle = "#6366F1"; 
-        ctx.font = "bold 24px Arial"; 
-        ctx.fillText("CashWise Expense Report", 40, 60);
+        ctx.font = "bold 26px Arial"; 
+        ctx.fillText("CashWise Ledger Report", 40, 60);
         
         ctx.fillStyle = "#64748B";
         ctx.font = "14px Arial";
         ctx.fillText("Generated: " + new Date().toLocaleString(), 40, 85);
 
-        let y = 130;
+        let y = 140;
         expenses.forEach(item => {
-            ctx.fillStyle = "#1E293B"; ctx.font = "bold 16px Arial"; ctx.fillText(item.name.split('\n')[0], 40, y);
-            ctx.fillStyle = "#64748B"; ctx.font = "12px Arial"; ctx.fillText(item.loc + "  |  " + format12h(item.time), 40, y + 20);
-            ctx.fillStyle = "#EF4444"; ctx.textAlign = "right"; ctx.fillText("-$" + item.amount, 560, y + 10);
-            ctx.textAlign = "left"; y += 65;
+            const isNote = item.type === 'note';
+            ctx.fillStyle = isNote ? "#F59E0B" : "#1E293B"; 
+            ctx.font = "bold 16px Arial"; 
+            ctx.fillText(item.name.split('\n')[0].substring(0, 45), 40, y);
+            
+            ctx.fillStyle = "#64748B"; 
+            ctx.font = "12px Arial"; 
+            const sub = isNote ? "NOTE Entry" : (item.loc + "  |  " + format12h(item.time));
+            ctx.fillText(sub, 40, y + 20);
+            
+            if(!isNote) {
+                ctx.fillStyle = "#EF4444"; 
+                ctx.textAlign = "right"; 
+                ctx.fillText("-$" + formatCurrency(item.amount), 560, y + 10);
+                ctx.textAlign = "left";
+            }
+            y += 70;
         });
         
         const link = document.createElement('a');
-        link.download = 'CashWise_Log.png'; 
+        link.download = `CashWise_Report_${Date.now()}.png`; 
         link.href = canvas.toDataURL('image/png'); 
         link.click();
     }
