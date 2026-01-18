@@ -110,7 +110,7 @@
         .day-separator {
             display: flex;
             align-items: center;
-            margin: 20px 0 12px 0;
+            margin: 24px 0 12px 0;
             gap: 10px;
         }
         .day-label {
@@ -119,6 +119,15 @@
             color: var(--secondary);
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        .day-total {
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: var(--text-main);
+            background: rgba(0,0,0,0.05);
+            padding: 2px 8px;
+            border-radius: 6px;
             white-space: nowrap;
         }
         .day-line {
@@ -310,7 +319,6 @@
 <canvas id="export-canvas"></canvas>
 
 <script>
-    // Register Service Worker for Offline Functionality
     if ('serviceWorker' in navigator) {
         const sw = `
             const CACHE_NAME = 'cashwise-v1';
@@ -395,7 +403,7 @@
             const now = new Date();
             now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
             document.getElementById('item-time').value = now.toISOString().slice(0, 16);
-            document.getElementById('item-name').focus();
+            // Keyboard focus removed here so user can see modal first
         }
     }
 
@@ -434,61 +442,77 @@
         const list = document.getElementById('spending-list');
         const totalDisp = document.getElementById('total-val');
         list.innerHTML = '';
-        let total = 0;
-        let lastDateLabel = "";
-
-        expenses.forEach((item, index) => {
-            const itemDate = new Date(item.time.replace(' ', 'T'));
-            const dateLabel = itemDate.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
-            
-            if (dateLabel !== lastDateLabel) {
-                const sep = document.createElement('div');
-                sep.className = 'day-separator';
-                sep.innerHTML = `<div class="day-line"></div><div class="day-label">${dateLabel}</div><div class="day-line"></div>`;
-                list.appendChild(sep);
-                lastDateLabel = dateLabel;
+        let grandTotal = 0;
+        
+        // Group expenses by date for daily totals
+        const groups = {};
+        expenses.forEach(item => {
+            const d = new Date(item.time.replace(' ', 'T'));
+            const label = d.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+            if (!groups[label]) groups[label] = { items: [], total: 0 };
+            groups[label].items.push(item);
+            if(item.type !== 'note') {
+                groups[label].total += parseFloat(item.amount);
+                grandTotal += parseFloat(item.amount);
             }
-
-            if(item.type !== 'note') total += parseFloat(item.amount);
-            
-            const div = document.createElement('div');
-            div.className = 'spend-item';
-            
-            if(item.type === 'note') {
-                div.innerHTML = `
-                    <div class="item-left">
-                        <span class="item-name" style="color:var(--note)">${item.name}</span>
-                        <div class="item-meta">
-                            <span class="icon icon-note" style="opacity:1"></span>
-                            <span>Note</span>
-                            <span class="dot">•</span>
-                            <span>${format12h(item.time)}</span>
-                        </div>
-                    </div>
-                    <div class="item-right">
-                        <div class="item-amount is-note">NOTE</div>
-                        <button class="item-delete" onclick="deleteItem(${index})">Delete</button>
-                    </div>
-                `;
-            } else {
-                div.innerHTML = `
-                    <div class="item-left">
-                        <span class="item-name">${item.name}</span>
-                        <div class="item-meta">
-                            <span>${item.loc}</span>
-                            <span class="dot">•</span>
-                            <span>${format12h(item.time)}</span>
-                        </div>
-                    </div>
-                    <div class="item-right">
-                        <div class="item-amount">-$${formatCurrency(item.amount)}</div>
-                        <button class="item-delete" onclick="deleteItem(${index})">Delete</button>
-                    </div>
-                `;
-            }
-            list.appendChild(div);
         });
-        totalDisp.innerText = `$${formatCurrency(total)}`;
+
+        // Render groups
+        Object.keys(groups).forEach(dateLabel => {
+            const group = groups[dateLabel];
+            
+            const sep = document.createElement('div');
+            sep.className = 'day-separator';
+            sep.innerHTML = `
+                <div class="day-line"></div>
+                <div class="day-label">${dateLabel}</div>
+                <div class="day-total">$${formatCurrency(group.total)}</div>
+                <div class="day-line"></div>
+            `;
+            list.appendChild(sep);
+
+            group.items.forEach((item) => {
+                const index = expenses.findIndex(e => e.id === item.id);
+                const div = document.createElement('div');
+                div.className = 'spend-item';
+                
+                if(item.type === 'note') {
+                    div.innerHTML = `
+                        <div class="item-left">
+                            <span class="item-name" style="color:var(--note)">${item.name}</span>
+                            <div class="item-meta">
+                                <span class="icon icon-note" style="opacity:1"></span>
+                                <span>Note</span>
+                                <span class="dot">•</span>
+                                <span>${format12h(item.time)}</span>
+                            </div>
+                        </div>
+                        <div class="item-right">
+                            <div class="item-amount is-note">NOTE</div>
+                            <button class="item-delete" onclick="deleteItem(${index})">Delete</button>
+                        </div>
+                    `;
+                } else {
+                    div.innerHTML = `
+                        <div class="item-left">
+                            <span class="item-name">${item.name}</span>
+                            <div class="item-meta">
+                                <span>${item.loc}</span>
+                                <span class="dot">•</span>
+                                <span>${format12h(item.time)}</span>
+                            </div>
+                        </div>
+                        <div class="item-right">
+                            <div class="item-amount">-$${formatCurrency(item.amount)}</div>
+                            <button class="item-delete" onclick="deleteItem(${index})">Delete</button>
+                        </div>
+                    `;
+                }
+                list.appendChild(div);
+            });
+        });
+
+        totalDisp.innerText = `$${formatCurrency(grandTotal)}`;
     }
 
     function deleteItem(index) {
